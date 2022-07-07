@@ -1,71 +1,55 @@
-#include "lists.h"
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-listint_t *create_node(int n);
+#include "lists.h"
 
 /**
- * insert_node - inserts a node sorted in a linked list of ints
- * @head: double pointer to head of LL, needed for modification in edge
- * cases
- * @number: data for new node
+ * insert_node - Inserts a number into a sorted singly linked list.
  *
- * Return: pointer to newly created node, NULL on failure
+ * @head: Double pointer to a singly linked list
+ *
+ * @number: Value of the new node.
+ *
+ * Return: The address of the new node, or NULL if it failed.
  */
+
 listint_t *insert_node(listint_t **head, int number)
 {
-	listint_t *cur_node = NULL, *new_node = NULL;
+	int flag = 0;
+	listint_t *new_node = NULL, *actual = NULL, *after = NULL;
 
-	if (!head)
+	if (head == NULL)
 		return (NULL);
-	else if (!(*head))
+	new_node = malloc(sizeof(listint_t));
+	if (!new_node)
+		return (NULL);
+	new_node->n = number, new_node->next = NULL;
+	if (*head == NULL)
 	{
-		new_node = create_node(number);
 		*head = new_node;
+		return (*head);
+	}
+	actual = *head;
+	if (number <= actual->n)
+	{
+		new_node->next = actual, *head = new_node;
+		return (*head);
+	}
+	if (number > actual->n && !actual->next)
+	{
+		actual->next = new_node;
 		return (new_node);
 	}
-	cur_node = *head;
-	while (cur_node)
+	after = actual->next;
+	while (actual)
 	{
-		/* need to insert at head */
-		if (cur_node->n >= number)
-		{
-			new_node = create_node(number);
-			new_node->next = cur_node;
-			*head = new_node;
-			return (new_node);
-		}
-		else if (cur_node->n <= number)
-		{
-			if (!cur_node->next || cur_node->next->n >= number)
-			{
-				new_node = create_node(number);
-				new_node->next = cur_node->next;
-				cur_node->next = new_node;
-				return (cur_node->next);
-			}
-		}
-		cur_node = cur_node->next;
+		if (!after)
+			actual->next = new_node, flag = 1;
+		else if (after->n == number)
+			actual->next = new_node, new_node->next = after, flag = 1;
+		else if (after->n > number && actual->n < number)
+			actual->next = new_node, new_node->next = after, flag = 1;
+		if (flag)
+			break;
+		after = after->next, actual = actual->next;
 	}
-	return (NULL); /* failed */
-}
-
-
-/**
- * create_node - creates a new node for the LL
- * @n: data to insert into new node
- *
- * Return: pointer to newly allocated node
- */
-listint_t *create_node(int n)
-{
-	listint_t *ret = NULL;
-
-	ret = malloc(sizeof(listint_t));
-	if (!ret)
-		return (NULL);
-	ret->next = NULL;
-	ret->n = n;
-	return (ret);
+	return (new_node);
 }
