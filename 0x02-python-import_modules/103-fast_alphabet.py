@@ -1,2 +1,2 @@
 #!/usr/bin/python3
-import string
+import fast_alphabet_103
