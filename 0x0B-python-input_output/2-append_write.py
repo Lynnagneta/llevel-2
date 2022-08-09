@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-'''
-Module to append text to file
-'''
+"""
+This module contains the function append_write.
+"""
 
 
 def append_write(filename="", text=""):
-    ''' Appends text to file '''
-    with open(filename, 'a') as open_file:
-        count = open_file.write(text)
-    return 
+    """
+    Appends to a file and returns the number of characters written.
+    """
+    with open(filename, 'a', encoding='utf-8') as f:
+        return f.write(text)
