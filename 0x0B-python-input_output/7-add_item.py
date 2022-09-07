@@ -1,18 +1,23 @@
 #!/usr/bin/python3
-'''
-Module that adds args to JSON file
-'''
+
+'''Task 07 - 7. Load, add, save'''
+
 
 import sys
-import os
 
-arg_list = sys.argv[1:]
 
-save_JSON = __import__('5-save_to_json_file').save_to_json_file
-load_JSON = __import__('6-load_from_json_file').load_from_json_file
+save = __import__('5-save_to_json_file').save_to_json_file
+load = __import__('6-load_from_json_file').load_from_json_file
 
-lisst = []
-if os.path.exists('add_item.json'):
-    lisst = load_JSON('add_item.json')
+file = "add_item.json"
 
-save_JSON(lisst + arg_list, "add_item.json")
+try:
+    f = load(file)
+except:
+    f = []
+
+argc = len(sys.argv)
+for i in range(1, argc):
+    f.append(sys.argv[i])
+
+save(f, file)
